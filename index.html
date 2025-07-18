@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Игра "Три в ряд"</title>
+    <link rel="stylesheet" href="main.css">
+    <!-- Добавляем шрифт Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <!-- Иконки для кнопок -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Favicon -->
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💎</text></svg>">
+</head>
+
+<body>
+    <!-- Фоновые эффекты -->
+    <div class="background-effects">
+        <div class="bubble" style="width: 200px; height: 200px; top: 20%; left: 10%;"></div>
+        <div class="bubble" style="width: 300px; height: 300px; top: 60%; left: 70%;"></div>
+        <div class="bubble" style="width: 150px; height: 150px; top: 30%; left: 50%;"></div>
+    </div>
+
+    <!-- Эффект параллакса -->
+    <div class="parallax-bg"></div>
+
+    <!-- Основной контейнер игры -->
+    <div class="game-container">
+        <h1 class="game-title">Три в ряд</h1>
+        <div id="game-board"></div>
+        <div class="controls">
+            <button id="restart">
+                <i class="fas fa-redo"></i> Новая игра
+            </button>
+            <div id="score">
+                <i class="fas fa-star"></i> Очки: <span class="score-value">0</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Сообщения (будут добавляться динамически) -->
+    <div class="message" id="message"></div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

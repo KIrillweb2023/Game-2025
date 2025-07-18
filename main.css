@@ -1,0 +1,684 @@
+:root {
+    /* Обновленная цветовая палитра с плавными переходами */
+    --primary-color: #6c5ce7;
+    --primary-light: #a29bfe;
+    --primary-dark: #5649c0;
+    --secondary-color: #fd79a8;
+    --secondary-light: #ffb8c6;
+    --secondary-dark: #e66797;
+    --dark-color: #2d3436;
+    --light-color: #f5f6fa;
+    --success-color: #00b894;
+    --success-light: #55efc4;
+    --warning-color: #fdcb6e;
+    --error-color: #d63031;
+    --text-color: #2d3436;
+    --text-light: #636e72;
+    --glass-color: rgba(255, 255, 255, 0.2);
+    --glass-border: rgba(255, 255, 255, 0.3);
+
+    /* Градиенты */
+    --gradient-primary: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-color) 100%);
+    --gradient-accent: linear-gradient(135deg, var(--secondary-dark) 0%, var(--secondary-color) 100%);
+    --gradient-bg: radial-gradient(circle at top right, #f5f7fa 0%, #c3cfe2 100%);
+    --gradient-success: linear-gradient(135deg, var(--success-color) 0%, var(--success-light) 100%);
+
+    /* Тени с большей глубиной */
+    --shadow-sm: 0 2px 12px rgba(0, 0, 0, 0.08);
+    --shadow-md: 0 6px 20px rgba(0, 0, 0, 0.12);
+    --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.18);
+    --shadow-primary: 0 6px 24px rgba(108, 92, 231, 0.4);
+    --shadow-accent: 0 6px 24px rgba(253, 121, 168, 0.4);
+    --inner-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+
+    /* Переходы с более динамичными кривыми */
+    --transition-fast: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+    --transition-normal: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    --transition-slow: all 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
+    --transition-bounce: all 0.5s cubic-bezier(0.68, -0.6, 0.32, 1.6);
+
+    /* Скругления */
+    --radius-sm: 10px;
+    --radius-md: 16px;
+    --radius-lg: 24px;
+    --radius-xl: 32px;
+    --radius-full: 999px;
+
+    /* Стек эффектов */
+    --backdrop-blur: blur(12px);
+}
+
+/* Базовые стили с улучшенной типографикой */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    background: var(--gradient-bg);
+    color: var(--text-color);
+    line-height: 1.6;
+    font-weight: 400;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    padding: 20px;
+}
+
+/* Контейнер игры с эффектом стекла */
+.game-container {
+    position: relative;
+    text-align: center;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.7) 100%);
+    backdrop-filter: var(--backdrop-blur);
+    -webkit-backdrop-filter: var(--backdrop-blur);
+    padding: 3rem;
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg);
+    max-width: 500px;
+    width: 100%;
+    overflow: hidden;
+    transform: translateY(0);
+    transition: var(--transition-normal);
+    will-change: transform;
+    border: 1px solid var(--glass-border);
+    z-index: 10;
+}
+
+.game-container:hover {
+    transform: translateY(-8px) scale(1.01);
+    box-shadow: var(--shadow-lg), 0 16px 40px rgba(0, 0, 0, 0.2);
+}
+
+.game-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 8px;
+    background: linear-gradient(90deg,
+            var(--secondary-color) 0%,
+            var(--primary-light) 33%,
+            var(--primary-color) 66%,
+            var(--success-color) 100%);
+    background-size: 300% 100%;
+    animation: gradientFlow 6s ease infinite;
+    z-index: 1;
+}
+
+/* Декоративные элементы */
+.game-container::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 150%;
+    height: 150%;
+    background: radial-gradient(circle, rgba(108, 92, 231, 0.1) 0%, transparent 70%);
+    transform: translate(-50%, -50%);
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* Заголовок с улучшенной анимацией */
+.game-title {
+    color: var(--primary-color);
+    margin-bottom: 2rem;
+    font-weight: 800;
+    font-size: 2.8rem;
+    position: relative;
+    display: inline-block;
+    background-clip: text;
+    -webkit-background-clip: text;
+    text-fill-color: transparent;
+    background-image: linear-gradient(45deg, var(--primary-dark), var(--secondary-color));
+    text-shadow: 0 4px 8px rgba(108, 92, 231, 0.15);
+    letter-spacing: -0.5px;
+    animation: titleFloat 4s ease-in-out infinite;
+}
+
+.game-title::after {
+    content: '';
+    position: absolute;
+    bottom: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 6px;
+    background: var(--gradient-accent);
+    border-radius: var(--radius-full);
+    animation: underlinePulse 3s ease infinite;
+}
+
+/* Игровое поле с 3D перспективой */
+#game-board {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 12px;
+    margin: 2.5rem auto;
+    perspective: 1500px;
+    transform-style: preserve-3d;
+    position: relative;
+    z-index: 2;
+}
+
+/* Камешки с улучшенными эффектами */
+.stone {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1/1;
+    background: white;
+    border-radius: var(--radius-md);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2.2rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: var(--transition-bounce);
+    box-shadow: var(--shadow-sm);
+    transform-style: preserve-3d;
+    overflow: hidden;
+    z-index: 1;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.stone::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg,
+            rgba(255, 255, 255, 0.4) 0%,
+            rgba(255, 255, 255, 0) 60%);
+    z-index: -1;
+    transition: var(--transition-fast);
+}
+
+.stone::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: inherit;
+    box-shadow: var(--inner-shadow);
+    pointer-events: none;
+}
+
+.stone:hover {
+    transform: translateY(-8px) scale(1.08) rotateX(15deg);
+    box-shadow: var(--shadow-md);
+    z-index: 3;
+}
+
+.stone:hover::before {
+    background: linear-gradient(135deg,
+            rgba(255, 255, 255, 0.6) 0%,
+            rgba(255, 255, 255, 0) 60%);
+}
+
+.stone.selected {
+    background: var(--secondary-color);
+    color: white;
+    transform: translateY(-8px) scale(1.15) rotateX(20deg);
+    box-shadow: var(--shadow-accent);
+    z-index: 10;
+    animation: stonePulse 2s ease infinite;
+}
+
+/* Цвета камешков с улучшенными градиентами */
+.stone[data-value="1"] {
+    background: linear-gradient(135deg, #ff7675 0%, #d63031 100%);
+    color: white;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.stone[data-value="2"] {
+    background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+    color: white;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.stone[data-value="3"] {
+    background: linear-gradient(135deg, #55efc4 0%, #00b894 100%);
+    color: white;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.stone[data-value="4"] {
+    background: linear-gradient(135deg, #a29bfe 0%, #6c5ce7 100%);
+    color: white;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.stone[data-value="5"] {
+    background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+    color: var(--dark-color);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Панель управления с эффектом стекла */
+.controls {
+    margin-top: 2.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1.8rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.controls::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--glass-color);
+    backdrop-filter: var(--backdrop-blur);
+    -webkit-backdrop-filter: var(--backdrop-blur);
+    border-radius: var(--radius-lg);
+    z-index: -1;
+    pointer-events: none;
+}
+
+#restart {
+    padding: 1rem 2rem;
+    background: var(--gradient-primary);
+    color: white;
+    border: none;
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    font-size: 1.1rem;
+    font-weight: 600;
+    transition: var(--transition-bounce);
+    box-shadow: var(--shadow-primary);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+    overflow: hidden;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+#restart::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0));
+    transform: rotate(30deg);
+    opacity: 0;
+    transition: var(--transition-fast);
+}
+
+#restart:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: var(--shadow-primary), 0 10px 30px rgba(108, 92, 231, 0.5);
+}
+
+#restart:hover::before {
+    opacity: 1;
+    animation: shine 1.5s ease infinite;
+}
+
+#restart:active {
+    transform: translateY(2px) scale(0.98);
+}
+
+#restart i {
+    font-size: 1.3rem;
+}
+
+#score {
+    font-size: 1.4rem;
+    font-weight: 700;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: var(--backdrop-blur);
+    -webkit-backdrop-filter: var(--backdrop-blur);
+    padding: 0.9rem 1.8rem;
+    border-radius: var(--radius-full);
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--primary-color);
+    border: 1px solid var(--glass-border);
+    transition: var(--transition-normal);
+}
+
+#score:hover {
+    transform: scale(1.05);
+    box-shadow: var(--shadow-md);
+}
+
+#score::before {
+    content: '✨';
+    font-size: 1.2rem;
+    animation: twinkle 2s ease infinite;
+}
+
+/* Анимации с улучшенными эффектами */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes gradientFlow {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+@keyframes underlinePulse {
+    0% {
+        width: 80px;
+        opacity: 1;
+    }
+
+    50% {
+        width: 100px;
+        opacity: 0.7;
+    }
+
+    100% {
+        width: 80px;
+        opacity: 1;
+    }
+}
+
+@keyframes stonePulse {
+    0% {
+        transform: translateY(-8px) scale(1.15) rotateX(20deg);
+        box-shadow: 0 0 0 0 rgba(253, 121, 168, 0.5);
+    }
+
+    70% {
+        transform: translateY(-8px) scale(1.15) rotateX(20deg);
+        box-shadow: 0 0 0 16px rgba(253, 121, 168, 0);
+    }
+
+    100% {
+        transform: translateY(-8px) scale(1.15) rotateX(20deg);
+        box-shadow: 0 0 0 0 rgba(253, 121, 168, 0);
+    }
+}
+
+@keyframes stoneMatch {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.3) rotate(15deg);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes stoneFall {
+    from {
+        transform: translateY(-150px) rotateX(90deg);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0) rotateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes titleFloat {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-8px);
+    }
+}
+
+@keyframes shine {
+    from {
+        left: -50%;
+    }
+
+    to {
+        left: 150%;
+    }
+}
+
+@keyframes twinkle {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.6;
+    }
+}
+
+.stone.matched {
+    animation: stoneMatch 0.7s cubic-bezier(0.68, -0.6, 0.32, 1.6) both;
+}
+
+.stone.falling {
+    animation: stoneFall 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+}
+
+/* Сообщения с эффектом стекла */
+.message {
+    position: fixed;
+    top: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 16px 32px;
+    background: linear-gradient(135deg, rgba(45, 52, 54, 0.9) 0%, rgba(45, 52, 54, 0.7) 100%);
+    backdrop-filter: var(--backdrop-blur);
+    -webkit-backdrop-filter: var(--backdrop-blur);
+    color: white;
+    border-radius: var(--radius-full);
+    box-shadow: var(--shadow-lg);
+    z-index: 1000;
+    opacity: 0;
+    transition: var(--transition-normal);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border: 1px solid var(--glass-border);
+    font-weight: 500;
+}
+
+.message.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+    animation: messageBounce 0.6s cubic-bezier(0.68, -0.6, 0.32, 1.6);
+}
+
+@keyframes messageBounce {
+    0% {
+        transform: translateX(-50%) translateY(-50px);
+    }
+
+    50% {
+        transform: translateX(-50%) translateY(10px);
+    }
+
+    100% {
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+.message.success {
+    background: linear-gradient(135deg, rgba(0, 184, 148, 0.9) 0%, rgba(85, 239, 196, 0.7) 100%);
+}
+
+.message.error {
+    background: linear-gradient(135deg, rgba(214, 48, 49, 0.9) 0%, rgba(255, 107, 107, 0.7) 100%);
+}
+
+.message i {
+    font-size: 1.4rem;
+}
+
+/* Эффекты фона */
+.background-effects {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
+}
+
+.bubble {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(108, 92, 231, 0.1);
+    filter: blur(20px);
+    animation: float 15s infinite linear;
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(0) rotate(0deg);
+    }
+
+    100% {
+        transform: translateY(-100vh) rotate(360deg);
+    }
+}
+
+/* Адаптивность с улучшенными breakpoints */
+@media (max-width: 600px) {
+    .game-container {
+        padding: 2rem;
+        border-radius: var(--radius-lg);
+    }
+
+    .game-title {
+        font-size: 2.2rem;
+    }
+
+    #game-board {
+        gap: 10px;
+    }
+
+    .stone {
+        font-size: 1.8rem;
+    }
+
+    #restart {
+        padding: 0.9rem 1.6rem;
+        font-size: 1rem;
+    }
+
+    #score {
+        font-size: 1.2rem;
+        padding: 0.8rem 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 10px;
+    }
+
+    .game-container {
+        padding: 1.8rem;
+        border-radius: var(--radius-md);
+    }
+
+    .game-title {
+        font-size: 2rem;
+        margin-bottom: 1.5rem;
+    }
+
+    #game-board {
+        gap: 8px;
+        margin: 1.8rem auto;
+    }
+
+    .controls {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    #restart,
+    #score {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* Дополнительные эффекты для камешков */
+.stone.swapping {
+    z-index: 20;
+    transition: transform 0.4s cubic-bezier(0.68, -0.6, 0.32, 1.6);
+}
+
+.stone.removing {
+    transform: scale(0) rotate(180deg);
+    opacity: 0;
+    transition: var(--transition-bounce);
+}
+
+/* Эффект параллакса для фона */
+.parallax-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 L0,100 Z" fill="none" stroke="%236c5ce7" stroke-width="0.5" stroke-opacity="0.1"/></svg>');
+    background-size: 50px 50px;
+    opacity: 0.3;
+}
+
+/* Эффект частиц (можно реализовать с JavaScript) */
+.particle {
+    position: absolute;
+    background: var(--primary-color);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: -1;
+}
