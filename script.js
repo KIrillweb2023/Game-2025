@@ -1,8 +1,17 @@
 class Game {
     static ROWS = 6;
     static COLS = 6;
-    static STONE_TYPES = ['💎', '🔴', '🔵', '🟢', '🟡', '🟣'];
-    static COLORS = ['#6c5ce7', '#ff7675', '#74b9ff', '#55efc4', '#ffeaa7', '#a29bfe'];
+    static STONE_TYPES = ['✨', '💎', '🔮', '🌟', '⚡', '❤️', '🌙', '☄️'];;
+    static COLORS = [
+        'rgba(255, 215, 0, 0.9)',     // Золотой
+        'rgba(0, 191, 255, 0.9)',     // Голубой
+        'rgba(138, 43, 226, 0.9)',    // Фиолетовый
+        'rgba(255, 69, 0, 0.9)',      // Оранжево-красный
+        'rgba(50, 205, 50, 0.9)',     // Зеленый
+        'rgba(255, 105, 180, 0.9)',   // Розовый
+        'rgba(70, 130, 180, 0.9)',    // Стальной синий
+        'rgba(123, 104, 238, 0.9)'    // Средний фиолетовый
+    ];
     static ANIMATION_DURATION = 400;
     static BONUS_MULTIPLIERS = [1, 1.2, 1.5, 2, 3];
 
