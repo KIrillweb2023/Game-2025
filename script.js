@@ -8,7 +8,7 @@ function resizeGame() {
 
     // Пересчитываем размеры элементов
     const minDimension = Math.min(width, height);
-    gemSize = Math.floor(minDimension * 0.1);
+    gemSize = Math.floor(minDimension * 0.08);
     gemPadding = Math.floor(gemSize * 0.15);
     gemRadius = Math.floor(gemSize * 0.3);
 
@@ -28,7 +28,7 @@ const app = new PIXI.Application({
     resolution: window.devicePixelRatio || 1,
     autoDensity: true // Важно для четкого отображения на HiDPI экранах
 });
-document.getElementById('game-container').appendChild(app.view);
+document.getElementById('game-board').appendChild(app.view);
 
 
 // Ресурсы игры
@@ -46,10 +46,11 @@ const resources = {
 };
 
 const gemTypes = Object.keys(resources.gems);
-const rows = 8, cols = 8;
+const rows = 7, cols = 7;
 let gemSize = 70, gemPadding = 10, gemRadius = 15;
 const board = Array(rows).fill().map(() => Array(cols).fill(null));
 let selectedGem = null, score = 0, combo = 0, comboTimeout = null;
+let lastSelectedGem = null;
 let comboText = null, boardContainer = null;
 // Добавьте обработчик ресайза
 
@@ -203,18 +204,31 @@ function createGem(type, x, y) {
 }
 
 function selectGem(gem) {
+    // Если камень уже был выбран и не был сброшен (не было совпадения)
+    if (lastSelectedGem === gem && !gem.parent) {
+        return; // Игнорируем повторный выбор
+    }
+
     if (!selectedGem) {
+        // Первый выбор камня
         selectedGem = gem;
+        lastSelectedGem = gem;
         createPulseEffect(gem);
         animateSelectedGem();
     } else if (selectedGem === gem) {
+        // Сброс выбора того же камня
         gsap.to(selectedGem.scale, { x: 1, y: 1, duration: 0.2 });
         selectedGem = null;
+        lastSelectedGem = null;
     } else if (isAdjacent(selectedGem, gem)) {
+        // Попытка свапнуть соседние камни
         swapGems(selectedGem, gem);
+        lastSelectedGem = null; // Сбрасываем последний выбранный камень после свапа
     } else {
+        // Выбор другого камня (не соседнего)
         gsap.to(selectedGem.scale, { x: 1, y: 1, duration: 0.2 });
         selectedGem = gem;
+        lastSelectedGem = gem;
         createPulseEffect(gem);
         animateSelectedGem();
     }
@@ -261,18 +275,116 @@ function isAdjacent(gem1, gem2) {
 function swapGems(gem1, gem2) {
     gsap.killTweensOf(selectedGem?.scale);
     selectedGem = null;
+    lastSelectedGem = null;
 
+    // Сохраняем оригинальные позиции для возможного отката
+    const originalPositions = {
+        gem1: { x: gem1.data.x, y: gem1.data.y },
+        gem2: { x: gem2.data.x, y: gem2.data.y }
+    };
+
+    // Меняем камни местами в массиве board
     [board[gem1.data.y][gem1.data.x], board[gem2.data.y][gem2.data.x]] = [gem2, gem1];
+
+    // Обновляем координаты в данных камней
     [gem1.data.x, gem2.data.x] = [gem2.data.x, gem1.data.x];
     [gem1.data.y, gem2.data.y] = [gem2.data.y, gem1.data.y];
 
+    // Целевые позиции для анимации
     const gem1TargetX = gem1.data.x * (gemSize + gemPadding) + gemSize / 2;
     const gem1TargetY = gem1.data.y * (gemSize + gemPadding) + gemSize / 2;
     const gem2TargetX = gem2.data.x * (gemSize + gemPadding) + gemSize / 2;
     const gem2TargetY = gem2.data.y * (gemSize + gemPadding) + gemSize / 2;
 
-    gsap.to(gem1.position, { x: gem1TargetX, y: gem1TargetY, duration: 0.3 });
-    gsap.to(gem2.position, { x: gem2TargetX, y: gem2TargetY, duration: 0.3, onComplete: checkMatches });
+    // Анимация перемещения
+    gsap.to(gem1.position, {
+        x: gem1TargetX,
+        y: gem1TargetY,
+        duration: 0.3,
+        onComplete: () => {
+            // После завершения анимации проверяем совпадения
+            const hasMatches = checkPotentialMatches();
+
+            if (!hasMatches) {
+                // Если совпадений нет - возвращаем камни на места
+                revertSwap(gem1, gem2, originalPositions);
+            } else {
+                // Если есть совпадения - продолжаем обычную проверку
+                checkMatches();
+            }
+        }
+    });
+
+    gsap.to(gem2.position, {
+        x: gem2TargetX,
+        y: gem2TargetY,
+        duration: 0.3
+    });
+}
+
+function revertSwap(gem1, gem2, originalPositions) {
+    // Возвращаем камни в исходные позиции в массиве board
+    [board[gem1.data.y][gem1.data.x], board[gem2.data.y][gem2.data.x]] = [gem2, gem1];
+
+    // Восстанавливаем оригинальные координаты
+    gem1.data.x = originalPositions.gem1.x;
+    gem1.data.y = originalPositions.gem1.y;
+    gem2.data.x = originalPositions.gem2.x;
+    gem2.data.y = originalPositions.gem2.y;
+
+    // Целевые позиции для возврата
+    const gem1OriginalX = originalPositions.gem1.x * (gemSize + gemPadding) + gemSize / 2;
+    const gem1OriginalY = originalPositions.gem1.y * (gemSize + gemPadding) + gemSize / 2;
+    const gem2OriginalX = originalPositions.gem2.x * (gemSize + gemPadding) + gemSize / 2;
+    const gem2OriginalY = originalPositions.gem2.y * (gemSize + gemPadding) + gemSize / 2;
+
+    // Анимация возврата
+    gsap.to(gem1.position, {
+        x: gem1OriginalX,
+        y: gem1OriginalY,
+        duration: 0.3
+    });
+
+    gsap.to(gem2.position, {
+        x: gem2OriginalX,
+        y: gem2OriginalY,
+        duration: 0.3
+    });
+}
+
+function checkPotentialMatches() {
+    // Временная функция для проверки возможных совпадений после свапа
+    let hasMatches = false;
+
+    // Проверка горизонтальных совпадений
+    for (let y = 0; y < rows; y++) {
+        for (let x = 0; x < cols - 2; x++) {
+            if (board[y][x] && board[y][x + 1] && board[y][x + 2] &&
+                board[y][x].data.type === board[y][x + 1].data.type &&
+                board[y][x].data.type === board[y][x + 2].data.type) {
+                hasMatches = true;
+                break;
+            }
+        }
+        if (hasMatches) break;
+    }
+
+    // Проверка вертикальных совпадений
+    if (!hasMatches) {
+        for (let x = 0; x < cols; x++) {
+            for (let y = 0; y < rows - 2; y++) {
+                if (board[y][x] && board[y + 1][x] && board[y + 2][x] &&
+                    board[y][x].data.type === board[y + 1][x].data.type &&
+                    board[y][x].data.type === board[y + 2][x].data.type) {
+                    hasMatches = true;
+                    break;
+                }
+            }
+            if (hasMatches) break;
+        }
+    }
+
+    return hasMatches;
 }
 
 function checkMatches() {
@@ -303,6 +415,11 @@ function checkMatches() {
 function destroyGems(gems) {
     const validGems = gems.filter(gem => gem?.parent);
     if (validGems.length === 0) return dropGems();
+
+    // Сбрасываем последний выбранный камень, если он был уничтожен
+    if (lastSelectedGem && validGems.includes(lastSelectedGem)) {
+        lastSelectedGem = null;
+    }
 
     combo++;
     if (combo > 1) {
