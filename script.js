@@ -8,7 +8,7 @@ function resizeGame() {
 
     // Пересчитываем размеры элементов
     const minDimension = Math.min(width, height);
-    gemSize = Math.floor(minDimension * 0.1);
+    gemSize = Math.floor(minDimension * 0.11);
     gemPadding = Math.floor(gemSize * 0.15);
     gemRadius = Math.floor(gemSize * 0.3);
 
@@ -75,7 +75,7 @@ function createBoard() {
     // Остальной код функции остается без изменений
     const boardBg = new PIXI.Graphics();
     boardBg.beginFill(0x16213e, 0.8)
-        .lineStyle(4, 0x00ffff, 1)
+        .lineStyle(1, 0x00ffff, 1)
         .drawRoundedRect(-10, -10, totalWidth + 20, totalHeight + 20, 15)
         .endFill();
     boardContainer.addChild(boardBg);
