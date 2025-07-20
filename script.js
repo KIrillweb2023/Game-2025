@@ -8,9 +8,9 @@ function resizeGame() {
 
     // Пересчитываем размеры элементов
     const minDimension = Math.min(width, height);
-    gemSize = Math.floor(minDimension * 0.08);
+    gemSize = Math.floor(minDimension * 0.1);
     gemPadding = Math.floor(gemSize * 0.15);
-    gemRadius = Math.floor(gemSize * 0.2);
+    gemRadius = Math.floor(gemSize * 0.3);
 
     // Пересоздаем доску
     if (boardContainer) {
